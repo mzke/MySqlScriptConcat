@@ -40,95 +40,21 @@ public class Program
         script.WriteLine(Create.CallDropIndexes());
         script.WriteLine(@"\! echo 'Indexes dropped.'");
 
-        /*
-        var arquivos = Directory.GetFiles(".", "*_table.sql");
-        foreach (var table in arquivos)
-        {
-            string? line = "";
-            using StreamReader tableFile = new(table);
-            {
-                while ((line = tableFile.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
         script.Concat("*_table.sql");
         script.WriteLine(@"\! echo 'Tables created.'");
-        /*
-        var pks = Directory.GetFiles(".", "*_pk.sql");
-        foreach (var pk in pks)
-        {
-            string? line = "";
-            using StreamReader sr = new(pk);
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
+        
         script.Concat("*_pk.sql");
         script.WriteLine(@"\! echo 'Primary Keys created.'");
-        /*
-        var fks = Directory.GetFiles(".", "*_fk.sql");
-        foreach (var fk in fks)
-        {
-            string? line = "";
-            using StreamReader sr = new(fk);
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
+        
         script.Concat("*_fk.sql");
         script.WriteLine(@"\! echo 'Foreign Keys created.'");
 
-        /*
-        var idxs = Directory.GetFiles(".", "*_idx.sql");
-        foreach (var idx in idxs)
-        {
-            string? line = "";
-            using StreamReader sr = new(idx);
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
         script.Concat("*_idx.sql");
         script.WriteLine(@"\! echo 'Indexes created.'");
-        /*
-        var triggersFiles = Directory.GetFiles(".", "*_trg.sql");
-        foreach (var trgFile in triggersFiles)
-        {
-            string? line = "";
-            using StreamReader sr = new(trgFile);
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
+        
         script.Concat("*_trg.sql");
         script.WriteLine(@"\! echo 'Triggers created.'");
-        /*
-        var viewFiles = Directory.GetFiles(".", "*_view.sql");
-        foreach (var vFile in viewFiles)
-        {
-            string? line = "";
-            using StreamReader sr = new(vFile);
-            {
-                while ((line = sr.ReadLine()) != null)
-                {
-                    script.WriteLine(line);
-                }
-            }
-        }*/
+        
         script.Concat("*_view.sql");
         script.WriteLine(@"\! echo 'Views created.'");
 
