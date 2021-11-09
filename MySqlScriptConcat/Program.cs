@@ -6,10 +6,7 @@ public class Program
     public static void Main(string[] args)
     {
         var schemaName = args[0];
-
         var outputFile = "./script.sql";
-
-        //using StreamWriter script = File.AppendText("./script.sql");
         Script script = new(outputFile);
         script.WriteLine($"use {schemaName};");
 
@@ -21,6 +18,9 @@ public class Program
         script.WriteLine(Create.ViewIndexesScript(schemaName));
         script.WriteLine(Create.DropTriggersScript(schemaName));
         script.WriteLine(Create.DropRoutinesScript());
+        script.WriteLine(Create.DropViewsScript());
+
+        
 
         // ERROR 1295 (HY000): This command is not supported in the prepared statement protocol yet
         // script.WriteLine(Create.CallDropRoutinesScript(schemaName, "PROCEDURE"));
@@ -39,6 +39,8 @@ public class Program
 
         script.WriteLine(Create.CallDropIndexes());
         script.WriteLine(@"\! echo 'Indexes dropped.'");
+
+        script.WriteLine(Create.CallDropViewsScript(schemaName));
 
         script.Concat("*_table.sql");
         script.WriteLine(@"\! echo 'Tables created.'");
@@ -64,12 +66,11 @@ public class Program
         script.Concat("*_sp.sql");
         script.WriteLine(@"\! echo 'Store Procedures created.'");
 
-
         script.WriteLine("DROP PROCEDURE tmp_drop_pk;");
         script.WriteLine("DROP PROCEDURE tmp_drop_fk;");
-        script.WriteLine("DROP VIEW tmp_indexes_view;");
-        script.WriteLine("SHOW WARNINGS;");
-        script.WriteLine("SHOW ERRORS;");
+       
+        
+        script.Concat("_post.sql");
         script.Close();
     }
 }

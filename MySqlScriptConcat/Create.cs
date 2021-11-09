@@ -151,10 +151,46 @@ DELIMITER ;
 ";
 	}
 
+	public static string CallDropViewsScript(string schemaName)
+	{
+		return $"CALL tmp_drop_views('{schemaName}');";
+	}
+	public static string DropViewsScript()
+	{
+		return @"
+DELIMITER $$
+DROP PROCEDURE IF EXISTS tmp_drop_views; $$
+CREATE PROCEDURE tmp_drop_views(
+	$schemaname VARCHAR(64)
+)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE $viewname VARCHAR(128);
+	DECLARE curV CURSOR FOR SELECT table_name
+                              FROM INFORMATION_SCHEMA.views 
+                              WHERE table_schema = $schemaname;
+   	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+	OPEN curV;
+		read_loop: LOOP
+			FETCH curV INTO $viewname;
+			IF done THEN
+				LEAVE read_loop;
+			END IF;
+			SET @q = CONCAT('DROP VIEW ', $viewname, ';');
+			PREPARE stmt1 FROM @q;
+			EXECUTE stmt1;
+			DEALLOCATE PREPARE stmt1;
+		END LOOP;
+	  CLOSE curV;
+END $$
+DELIMITER ;
+";
+	}
+
 	public static string ViewIndexesScript(string schemaName)
 	{
 		return @"
-
+DROP VIEW IF EXISTS tmp_indexes_view;
 CREATE VIEW tmp_indexes_view AS
 select distinct I.table_name,  I.index_name
 from INFORMATION_SCHEMA.statistics I
