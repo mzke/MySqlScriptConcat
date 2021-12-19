@@ -10,7 +10,7 @@ public class Program
         Script script = new(outputFile);
         script.WriteLine($"use {schemaName};");
 
-        script.Concat("_pre.sql");
+        script.Concat("*_pre.sql");
 
         script.WriteLine(Create.DropPkScript(schemaName));
         script.WriteLine(Create.DropFkScript(schemaName));
@@ -70,7 +70,7 @@ public class Program
         script.WriteLine("DROP PROCEDURE tmp_drop_fk;");
        
         
-        script.Concat("_post.sql");
+        script.Concat("*_post.sql");
         script.Close();
     }
 }
